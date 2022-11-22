@@ -5,6 +5,10 @@ from OpenGL.GLUT import *
 window_size = 1500
 
 
+def init():
+    glClearColor(0.0, 0.0, 0.0, 1.0)
+    gluOrtho2D(0, 100, 0, 100)
+
 def get_pixel(x, y):
     pixel = glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT)
     return pixel
@@ -34,7 +38,8 @@ def mouse_click(button, state, x, y):
 
 
 def main():
-    glutInit()
+
+    glutInit(sys.argv)
     glutInitWindowSize(window_size, window_size)
     glutCreateWindow("Point")
     glutMouseFunc(mouse_click)
