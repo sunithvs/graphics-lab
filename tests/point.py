@@ -1,6 +1,7 @@
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
+from OpenGL import images
 
 window_size = 1500
 
@@ -16,13 +17,9 @@ def line(p1, p2):
 
 
 def get_pixel(x, y):
+    color = [0, 0, 0]
     pixel = glReadPixels(x, y, 3, 3, GL_RGB, GL_FLOAT)
-    for j in pixel:
-        for i in j:
-            for k in i:
-                print(k, end=" ")
-            print()
-    return pixel
+    return images.returnFormat(pixel, GL_FLOAT)
 
 
 def triangle(p1, p2, p3):
@@ -30,14 +27,15 @@ def triangle(p1, p2, p3):
     # color pen red
     glColor3f(1.0, 0.0, 0.0)
     glBegin(GL_TRIANGLES)
-    glVertex2f(p1[0] / window_size, p1[1] / window_size)
-    glVertex2f(p2[0] / window_size, p2[1] / window_size)
-    glVertex2f(p3[0] / window_size, p3[1] / window_size)
+    glVertex2i(p1[0], p1[1])
+    glVertex2i(p2[0], p2[1])
+    glVertex2i(p3[0], p3[1])
     glEnd()
 
 
 def set_pixel(x, y, filled_color):
     print(f"{x =} {y =}")
+    glClear(GL_COLOR_BUFFER_BIT)
     glColor3f(filled_color[0], filled_color[1], filled_color[2])
     glBegin(GL_POINTS)
     glVertex2f(x, y)
@@ -49,7 +47,7 @@ def plot():
     glClear(GL_COLOR_BUFFER_BIT)
     glColor3f(1.0, 1.0, 1.0)
     glLineWidth(3)
-    triangle((0, 0), (0, 800), (800, 0))
+    triangle((0, 0), (200, 300), (0, 500))
     glFlush()
 
 
@@ -59,7 +57,11 @@ def get_coordinates(x, y):
     x = x - window_size / 2
     y = window_size / 2 - y
     print(x, y)
-    get_pixel(x / (window_size / 2), y / (window_size / 2))
+    ls = get_pixel(x, y)
+    for i in ls:
+        for j in i:
+            print(j, end=" ")
+        print()
 
 
 def mouse_click(button, state, x, y):
@@ -69,6 +71,7 @@ def mouse_click(button, state, x, y):
 
 def main():
     glutInit()
+    glMatrixMode(GL_PROJECTION)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     gluOrtho2D(-1.0, 1.0, -1.0, 1.0)

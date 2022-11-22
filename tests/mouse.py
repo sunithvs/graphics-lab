@@ -32,13 +32,11 @@ def plot_coordinates(x, y):
 
 
 def mouse_click(button, state, x, y):
-
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
         plot_coordinates(x, y)
 
 
 def main():
-
     glutInit(sys.argv)
     glutInitWindowSize(window_size, window_size)
     glutCreateWindow("Point")

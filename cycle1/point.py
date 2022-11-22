@@ -12,9 +12,9 @@ def clearscreen():  # clears the windows
 def plot_points():
     glClear(GL_COLOR_BUFFER_BIT)
     glColor3f(0.0, 1.0, 0.0)
-    glPointSize(5.0)
+    glPointSize(10)
     glBegin(GL_POINTS)
-    glVertex2f(0.0, 0.0)
+    glVertex2f(-1, -1)
     glEnd()
     glFlush()
 
