@@ -1,0 +1,2 @@
+certifi @ file:///croot/certifi_1665076670883/work/certifi
+PyOpenGL==3.1.6
