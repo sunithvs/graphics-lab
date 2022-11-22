@@ -5,6 +5,9 @@ from OpenGL.GLUT import *
 window_size = 1500
 
 
+# Change coordinate system of window
+
+
 def line(p1, p2):
     glBegin(GL_LINES)
     glVertex2f(p1[0] / window_size, p1[1] / window_size)
@@ -13,12 +16,19 @@ def line(p1, p2):
 
 
 def get_pixel(x, y):
-    pixel = glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT)
+    pixel = glReadPixels(x, y, 3, 3, GL_RGB, GL_FLOAT)
+    for j in pixel:
+        for i in j:
+            for k in i:
+                print(k, end=" ")
+            print()
     return pixel
 
 
 def triangle(p1, p2, p3):
     # glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+    # color pen red
+    glColor3f(1.0, 0.0, 0.0)
     glBegin(GL_TRIANGLES)
     glVertex2f(p1[0] / window_size, p1[1] / window_size)
     glVertex2f(p2[0] / window_size, p2[1] / window_size)
@@ -49,7 +59,7 @@ def get_coordinates(x, y):
     x = x - window_size / 2
     y = window_size / 2 - y
     print(x, y)
-    set_pixel(x / (window_size / 2), y / (window_size / 2), [1.0, 1.0, 0.0])
+    get_pixel(x / (window_size / 2), y / (window_size / 2))
 
 
 def mouse_click(button, state, x, y):
@@ -59,6 +69,9 @@ def mouse_click(button, state, x, y):
 
 def main():
     glutInit()
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluOrtho2D(-1.0, 1.0, -1.0, 1.0)
     glutInitWindowSize(window_size, window_size)
     glutCreateWindow("Point")
     glutMouseFunc(mouse_click)
