@@ -17,19 +17,36 @@ def line(p1, p2):
 
 
 def get_pixel(x, y):
-    color = [0, 0, 0]
-    pixel = glReadPixels(x, y, 3, 3, GL_RGB, GL_FLOAT)
-    return images.returnFormat(pixel, GL_FLOAT)
+    print(x, y)
+    pixel = glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT)
+    print(pixel)
+    return pixel
 
 
 def triangle(p1, p2, p3):
     # glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     # color pen red
     glColor3f(1.0, 0.0, 0.0)
-    glBegin(GL_TRIANGLES)
-    glVertex2i(p1[0], p1[1])
-    glVertex2i(p2[0], p2[1])
-    glVertex2i(p3[0], p3[1])
+    glBegin(GL_POLYGON)
+    glVertex2i(-1, 0)
+    glVertex2i(0, 0)
+    glVertex2i(0, 1)
+    glVertex2i(-1, 1)
+    glEnd()
+
+    glColor3f(0.0, 1.0, 0.0)
+    glBegin(GL_POLYGON)
+    glVertex2i(0, 0)
+    glVertex2i(1, 0)
+    glVertex2i(1, 1)
+    glVertex2i(0, 1)
+    glEnd()
+    glColor3f(0.0, 0.0, 1.0)
+    glBegin(GL_POLYGON)
+    glVertex2i(0, 0)
+    glVertex2i(1, 0)
+    glVertex2i(1, -1)
+    glVertex2i(0, -1)
     glEnd()
 
 
@@ -54,19 +71,25 @@ def plot():
 # get the coordinates of the position of the mouse click
 def get_coordinates(x, y):
     print(f"{x =} {y =}")
-    x = x - window_size / 2
-    y = window_size / 2 - y
-    print(x, y)
-    ls = get_pixel(x, y)
-    for i in ls:
-        for j in i:
-            print(j, end=" ")
-        print()
+    ls = get_pixel(x, window_size - y)
+    found = False
+    for i in range(len(ls)):
+        for j in range(len(ls[i])):
+            if ls[i][j][0] != 0:
+                print(f"{i =}, {j =}")
+                found = True
+                break
+            if found:
+                break
 
 
 def mouse_click(button, state, x, y):
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
         get_coordinates(x, y)
+    elif button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
+        print("hi")
+        k = get_pixel(x, y)
+        print(k)
 
 
 def main():

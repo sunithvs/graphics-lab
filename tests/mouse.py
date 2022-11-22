@@ -9,8 +9,11 @@ def init():
     glClearColor(0.0, 0.0, 0.0, 1.0)
     gluOrtho2D(0, 100, 0, 100)
 
+
 def get_pixel(x, y):
-    pixel = glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT)
+    x = x - window_size / 2
+    y = window_size / 2 - y
+    pixel = glReadPixels(x / (window_size / 2), y / (window_size / 2), 1, 1, GL_RGB, GL_FLOAT)
     return pixel
 
 
@@ -34,6 +37,10 @@ def plot_coordinates(x, y):
 def mouse_click(button, state, x, y):
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
         plot_coordinates(x, y)
+    elif button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
+        print("hi")
+        k = get_pixel(x, y)
+        print(k)
 
 
 def main():
