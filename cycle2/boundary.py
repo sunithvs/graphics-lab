@@ -2,6 +2,7 @@
 # CS B
 # 2022098
 
+
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -9,7 +10,7 @@ import sys
 
 window_size = 800
 point_size = 5
-sys.setrecursionlimit(100000)
+sys.setrecursionlimit(1000000)
 
 
 def init():
@@ -31,28 +32,15 @@ def set_pixel(x, y, filled_color):
 
 
 def plot_rect():
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     gluOrtho2D(0, window_size, 0, window_size)
     glColor3f(1, 0, 0)
+    glLineWidth(point_size)
     glBegin(GL_POLYGON)
-    glVertex2f(0, 0)
-    glVertex2f(window_size / 2, 0)
+    glVertex2f(10, 10)
+    glVertex2f(window_size / 2, 10)
     glVertex2f(window_size / 2, window_size / 2)
-    glVertex2f(0, window_size / 2)
-    glEnd()
-    glColor3f(0, 1, 0)
-    glBegin(GL_POLYGON)
-    glVertex2f(window_size / 2, 0)
-    glVertex2f(window_size, 0)
-    glVertex2f(window_size, window_size / 2)
-    glVertex2f(window_size / 2, window_size / 2)
-    glEnd()
-    glColor3f(0, 0, 1)
-    glBegin(GL_POLYGON)
-    glVertex2f(window_size, window_size / 2)
-    glVertex2f(window_size, window_size)
-    glVertex2f(window_size / 2, window_size)
-
-    glVertex2f(window_size / 2, window_size / 2)
+    glVertex2f(10, window_size / 2)
     glEnd()
     glFlush()
 
@@ -70,15 +58,16 @@ def list_equal(l1, l2):
     return True
 
 
-def flood_fill(x, y, new_color, old_color):
+def boundary_fill(x, y, fill_color, boundary_color):
     color = get_pixel(x, y)
-    print(color, new_color, old_color)
-    if (not list_equal(color, new_color)) and list_equal(color, old_color):
-        set_pixel(x, y, new_color)
-        flood_fill(x + point_size, y, new_color, old_color)
-        flood_fill(x, y + point_size, new_color, old_color)
-        flood_fill(x - point_size, y, new_color, old_color)
-        flood_fill(x, y - point_size, new_color, old_color)
+    print(color, fill_color, boundary_color)
+    if (not list_equal(color, fill_color)) and not list_equal(color, boundary_color):
+        print("setting px ")
+        set_pixel(x, y, fill_color)
+        boundary_fill(x + point_size, y, fill_color, boundary_color)
+        boundary_fill(x, y + point_size, fill_color, boundary_color)
+        boundary_fill(x - point_size, y, fill_color, boundary_color)
+        boundary_fill(x, y - point_size, fill_color, boundary_color)
 
 
 def mouse_click(button, state, x, y):
@@ -86,8 +75,8 @@ def mouse_click(button, state, x, y):
         plot_coordinates(x, y)
     elif button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
         print("hi")
-        old_color = get_pixel(x, y)
-        flood_fill(x, y, [1, 1, 0], old_color)
+        old_color = [1, 0, 0]
+        boundary_fill(x, y, [1, 1, 0], old_color)
 
 
 def main():
