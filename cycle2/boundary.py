@@ -1,16 +1,14 @@
-# sunith vs
-# CS B
-# 2022098
-
-
+import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import sys
 
+# for setting window size
 window_size = 800
 point_size = 5
-sys.setrecursionlimit(1000000)
+sys.setrecursionlimit(100000)
+boundary_fill_color = [1, 0, 0]
 
 
 def init():
@@ -19,21 +17,48 @@ def init():
 
 def get_pixel(x, y):
     pixel = glReadPixels(x, window_size - y, 1, 1, GL_RGB, GL_FLOAT)
-    return pixel[0][0]
+    # here the  pixel will be of format
+    # [
+    #     [
+    #       [red,green,blue]
+    #     ]
+    # ]
+    # for that we use indexing to get list of rgb
+    return np.array([round(x, 1) for x in pixel[0][0]])
 
 
-def set_pixel(x, y, filled_color):
-    glColor3f(filled_color[0], filled_color[1], filled_color[2])
+def set_pixel(x, y, fill_color=(0, 0, 0)):
+    glColor3f(*fill_color)
     glPointSize(point_size)
     glBegin(GL_POINTS)
-    glVertex2f(x, window_size - y)
+    glVertex2f(x, y)
     glEnd()
     glFlush()
 
 
+def rectangle_without_fill(vertices, color):
+    """
+    :param vn pixel[0][0]ertices : it is list  of 4 vertex
+        eg [
+            [x1,y1],
+            [x2,y2],
+            [x3,y3],
+            [x4,y4],
+          ]
+    :param color: [red,green,blue]
+    :return: onnumilla
+    """
+    glColor3f(color[0], color[1], color[2])
+    glPointSize(point_size)
+    glBegin(GL_LINE_LOOP)
+    for vertex in vertices:
+        glVertex2f(*vertex)
+    glEnd()
+
+
 def plot_rect():
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-    gluOrtho2D(0, window_size, 0, window_size)
+    gluOrtho2D(0, window_size, window_size, 0)
     glColor3f(1, 0, 0)
     glLineWidth(point_size)
     glBegin(GL_POLYGON)
@@ -45,24 +70,10 @@ def plot_rect():
     glFlush()
 
 
-def plot_coordinates(x, y):
-    set_pixel(x, y, [1.0, 1.0, 1.0])
-
-
-def list_equal(l1, l2):
-    if len(l1) != len(l2):
-        return False
-    for i in range(len(l1)):
-        if l1[i] != l2[i]:
-            return False
-    return True
-
-
 def boundary_fill(x, y, fill_color, boundary_color):
     color = get_pixel(x, y)
-    print(color, fill_color, boundary_color)
-    if (not list_equal(color, fill_color)) and not list_equal(color, boundary_color):
-        print("setting px ")
+    if (not all(color == fill_color)) and not all(color == boundary_color):
+
         set_pixel(x, y, fill_color)
         boundary_fill(x + point_size, y, fill_color, boundary_color)
         boundary_fill(x, y + point_size, fill_color, boundary_color)
@@ -72,16 +83,11 @@ def boundary_fill(x, y, fill_color, boundary_color):
 
 def mouse_click(button, state, x, y):
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
-        plot_coordinates(x, y)
-    elif button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
-        print("hi")
-        old_color = [1, 0, 0]
-        boundary_fill(x, y, [1, 1, 0], old_color)
+        boundary_fill(x, y, [0, 1, .5], boundary_fill_color)
 
 
 def main():
-    glutInit(sys.argv)
-
+    glutInit()
     glutInitWindowSize(window_size, window_size)
     glutCreateWindow("Point")
     glutDisplayFunc(plot_rect)
