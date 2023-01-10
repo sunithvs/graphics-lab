@@ -26,18 +26,13 @@ def set_pixel(x, y):
 
 
 def ellipse(xc, yc, a, b):
-    theta = math.pi / 2
+    theta = 2 * math.pi
     while theta >= 0:
-        print(theta)
         x = a * math.cos(theta)
         y = b * math.sin(theta)
-        print(x + xc, y + yc)
         set_pixel(x + xc, y + yc)
-        set_pixel(x + xc, -y + yc)
-        set_pixel(-x + xc, y + yc)
-        set_pixel(-x + xc, -y + yc)
-
         theta -= 0.02
+
 
 
 def display():

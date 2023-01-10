@@ -37,6 +37,7 @@ def set_pixel(x, y, fill_color=(0, 0, 0)):
 
 def rectangle(vertices, color):
     """
+    :param vertices:
     :param vn pixel[0][0]ertices : it is list  of 4 vertex
         eg [
             [x1,y1],
