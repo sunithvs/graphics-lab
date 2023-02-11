@@ -1,4 +1,5 @@
 import math
+from random import random
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -18,31 +19,21 @@ def init():
     # gluOrtho2D(0,window_size,window_size,0)
 
 
-def set_pixel(x, y):
-    glPointSize(point_size)
-    glBegin(GL_POINTS)
-    glVertex2f(x, y)
+def ellipse(x, y, a, b):
+    glBegin(GL_POLYGON)
+    for i in range(360):
+        glVertex2f(x + a * math.cos(math.radians(i)), y + b * math.sin(math.radians(i)))
     glEnd()
-
-
-def ellipse(xc, yc, a, b):
-    theta = 2 * math.pi
-    while theta >= 0:
-        x = a * math.cos(theta)
-        y = b * math.sin(theta)
-        set_pixel(x + xc, y + yc)
-        theta -= 0.02
-
+    glFlush()
 
 
 def display():
-    glClear(GL_COLOR_BUFFER_BIT)
-    xc = -.3
-    yc = .3
-    a = .5
-    b = .3
-    ellipse(xc, yc, a, b)
+    # gluOrtho2D(0, window_size, window_size, 0)
+    # glClear(GL_COLOR_BUFFER_BIT)
+    ellipse(random(), random(), random() * 0.01, random() * 0.01)
     glFlush()
+    glutSwapBuffers()
+    glutPostRedisplay()
 
 
 def main():
