@@ -14,7 +14,7 @@ def plot_points():
     glColor3f(0.0, 1.0, 0.0)
     glPointSize(10)
     glBegin(GL_POINTS)
-    glVertex2f(-1, -1)
+    glVertex2f(0, 0)
     glEnd()
     glFlush()
 
